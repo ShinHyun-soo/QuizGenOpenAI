@@ -70,7 +70,7 @@ def main():
         ["multiple-choice", "true-false", "open-ended"],
     )
     num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=10, value=3)
-    llm = ChatOpenAI(model="gpt-4-turbo")
+    llm = ChatOpenAI(model="gpt-4o")
 
     if "context" not in st.session_state:
         st.session_state.context = None  # context 초기화

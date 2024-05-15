@@ -122,7 +122,7 @@ def create_open_ended_template(language):
 def main():
     st.title("Quiz App")
     st.write("This app generates a quiz based on a given context.")
-    llm = ChatOpenAI(model="gpt-4-turbo")
+    llm = ChatOpenAI(model="gpt-4o")
     context = st.text_area("Enter the concept/context for the quiz")
     num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=10, value=3)
     quiz_type = st.selectbox("Select the quiz type", ["multiple-choice", "true-false", "open-ended"])

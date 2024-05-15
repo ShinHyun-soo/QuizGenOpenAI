@@ -71,7 +71,7 @@ def main():
         ["multiple-choice", "true-false", "open-ended"],
     )
     num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=10, value=3)
-    llm = ChatOpenAI(model="gpt-4-turbo")
+    llm = ChatOpenAI(model="gpt-4o")
 
     if "context" not in st.session_state:
         st.session_state.context = None  # context 초기화
@@ -112,7 +112,7 @@ def main():
                 prompt_template = create_open_ended_template(language)
                 pydantic_object_schema = QuizOpenEnded
 
-            st.write("에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다 ㅎㅎ")
+            st.write("생성 중, 에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다 ㅎㅎ")
             chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
             st.session_state.quiz_data = chain.invoke({"num_questions": num_questions, "quiz_context": st.session_state.context})
             st.session_state.user_answers = [None] * len(st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
