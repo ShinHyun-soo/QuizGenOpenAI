@@ -120,13 +120,13 @@ def create_open_ended_template(language):
     return prompt
 
 def main():
-    st.title("Quiz App")
-    st.write("This app generates a quiz based on a given context.")
+    st.title("QuizGen:books:")
+    st.write("퀴즈 생성기")
     llm = ChatOpenAI(model="gpt-4o")
-    context = st.text_area("Enter the concept/context for the quiz")
-    num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=10, value=3)
-    quiz_type = st.selectbox("Select the quiz type", ["multiple-choice", "true-false", "open-ended"])
-    language = st.selectbox("Select the translation language",  ["English", "korean", "Spanish", "French"])  # 언어 선택
+    context = st.text_area("주제를 입력해 주십시오.")
+    language = st.radio("언어 선택",  ["English", "korean"])  # 언어 선택
+    quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"])
+    num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
 
     # 퀴즈 유형 변경 시 상태 초기화
     if 'quiz_type' not in st.session_state or st.session_state.quiz_type != quiz_type:
@@ -135,18 +135,18 @@ def main():
         st.session_state.user_answers = None
 
 
-    if st.button("Generate Quiz"):
-        if quiz_type == "multiple-choice":
+    if st.button("퀴즈 생성"):
+        if quiz_type == "객관식":
             prompt_template = create_multiple_choice_template(language)
             pydantic_object_schema = QuizMultipleChoice
-        elif quiz_type == "true-false":
+        elif quiz_type == "참/거짓":
             prompt_template = create_true_false_template(language)
             pydantic_object_schema = QuizTrueFalse
         else:
             prompt_template = create_open_ended_template(language)
             pydantic_object_schema = QuizOpenEnded
 
-        st.write("에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다 ㅎㅎ")
+        st.write("퀴즈 생성 중, 올바르게 생성되지 않으면 퀴즈 생성 버튼을 다시 눌러 주시기 바랍니다.")
         chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
         st.session_state.quiz_data = chain.invoke({"num_questions": num_questions, "quiz_context": context})
         st.session_state.user_answers = [None] * len(st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
@@ -156,26 +156,27 @@ def main():
         user_answers = {}
         for idx, question in enumerate(st.session_state.quiz_data.questions):
             st.write(f"**{idx + 1}. {question}**")
-            if quiz_type != "open-ended":
+            if quiz_type != "주관식":
                 options = st.session_state.quiz_data.alternatives[idx]
-                user_answer_key = st.radio("Select an answer:", options, key=idx)
+                user_answer_key = st.radio("답 : ", options, key=idx)
                 user_answers[idx] = user_answer_key
             else:
-                user_answers[idx] = st.text_area("Your answer:", key=idx)
+                user_answers[idx] = st.text_area("답 : ", key=idx)
 
-        if st.button("Score Quiz"):
+        if st.button("채점"):
             score = 0
             correct_answers = []
             for idx, question in enumerate(st.session_state.quiz_data.questions):
                 correct_answer = st.session_state.quiz_data.answers[idx]
-                if quiz_type != "open-ended":
+                if quiz_type != "주관식":
                     if user_answers[idx] == correct_answer:
                         score += 1
                 correct_answers.append(f"{idx + 1}. {correct_answer}")
-            st.write("Quiz results:")
-            st.write(f"Your score: {score}/{len(st.session_state.quiz_data.questions)}")
+            st.subheader("채점 결과")
+            st.write(f"점수: {score}/{len(st.session_state.quiz_data.questions)}")
+            expander = st.expander("정답 보기")
             for correct_answer in correct_answers:
-                st.write(correct_answer)
+                expander.write(correct_answer)
 
 
 if __name__ == "__main__":

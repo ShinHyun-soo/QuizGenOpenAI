@@ -92,18 +92,18 @@ def main():
     # app config
     st.set_page_config(page_title="사이트 기반 문제 생성", page_icon="🤖")
     st.write(css, unsafe_allow_html=True)
-    st.header("퀴즈 생성기 :url:")
-    st.caption("url 입력후 원하시는 문제를 선택하여 주십시오. ")
+    st.header("퀴즈 생성기 :book")
+    st.caption("url 입력 후 원하시는 문제를 선택하여 주십시오. ")
 
     language = st.radio(
             "언어 선택",
-            ["English", "한국어", "Spanish", "French"],
+            ["English", "Korean"],
         )
     quiz_type = st.radio(
             "종류 선택",
-            ["multiple-choice", "true-false", "open-ended"],
+            ["객관식", "참/거짓", "주관식"],
         )
-    num_questions = st.number_input("Enter the number of questions", min_value=1, max_value=10, value=3)
+    num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
     llm = ChatOpenAI(model="gpt-4o")
 
     if "context" not in st.session_state:
@@ -111,8 +111,8 @@ def main():
 
     # sidebar
     with st.sidebar:
-        st.header("URL 입력 후 엔터를 눌러 주십시오.")
-        website_url = st.text_input("Website URL")
+        st.header("참고할 사이트 주소 입력.")
+        website_url = st.text_input("예시 : https://google.com")
 
         if st.button("벡터 변환"):
             with st.spinner("변환 중"):
@@ -132,50 +132,51 @@ def main():
         st.session_state.quiz_data = None
         st.session_state.user_answers = None
 
-    if st.button("Generate Quiz"):
+    if st.button("문제 생성"):
         if st.session_state.context:
-            if quiz_type == "multiple-choice":
+            if quiz_type == "객관식":
                 prompt_template = create_multiple_choice_template(language)
                 pydantic_object_schema = QuizMultipleChoice
-            elif quiz_type == "true-false":
+            elif quiz_type == "참/거짓":
                 prompt_template = create_true_false_template(language)
                 pydantic_object_schema = QuizTrueFalse
             else:
                 prompt_template = create_open_ended_template(language)
                 pydantic_object_schema = QuizOpenEnded
 
-            st.write("에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다 ㅎㅎ")
+            st.write("에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다.")
             chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
             st.session_state.quiz_data = chain.invoke({"num_questions": num_questions, "quiz_context": st.session_state.context})
             st.session_state.user_answers = [None] * len(st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
         else:
-            st.write("url을 왼쪽 슬라이드에 입력하고 벡터 변환해주세요")
+            st.write("url이 입력 되지 않았습니다.")
 
 
     if 'quiz_data' in st.session_state and st.session_state.quiz_data:
         user_answers = {}
         for idx, question in enumerate(st.session_state.quiz_data.questions):
             st.write(f"**{idx + 1}. {question}**")
-            if quiz_type != "open-ended":
+            if quiz_type != "주관식":
                 options = st.session_state.quiz_data.alternatives[idx]
-                user_answer_key = st.radio("Select an answer:", options, key=idx)
+                user_answer_key = st.radio("답:", options, key=idx)
                 user_answers[idx] = user_answer_key
             else:
-                user_answers[idx] = st.text_area("Your answer:", key=idx)
+                user_answers[idx] = st.text_area("답:", key=idx)
 
-        if st.button("Score Quiz"):
+        if st.button("채점"):
             score = 0
             correct_answers = []
             for idx, question in enumerate(st.session_state.quiz_data.questions):
                 correct_answer = st.session_state.quiz_data.answers[idx]
-                if quiz_type != "open-ended":
+                if quiz_type != "주관식":
                     if user_answers[idx] == correct_answer:
                         score += 1
                 correct_answers.append(f"{idx + 1}. {correct_answer}")
-            st.write("Quiz results:")
-            st.write(f"Your score: {score}/{len(st.session_state.quiz_data.questions)}")
+            st.subheader("채점 결과")
+            st.write(f"점수: {score}/{len(st.session_state.quiz_data.questions)}")
+            expander = st.expander("정답 보기")
             for correct_answer in correct_answers:
-                st.write(correct_answer)
+                expander.write(correct_answer)
 
         
 if __name__ == "__main__":
