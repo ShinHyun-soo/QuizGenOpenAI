@@ -58,7 +58,7 @@ def main():
                        page_icon=":books:")
     st.write(css, unsafe_allow_html=True)
 
-    st.header("퀴즈 생성기 :books:")
+    st.header("QuizGen :books:")
     st.caption("Text 업로드 후 원하시는 문제를 선택하여 주십시오. ")
 
     language = st.radio(

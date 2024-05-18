@@ -121,7 +121,7 @@ def create_open_ended_template(language):
 
 def main():
     st.title("QuizGen:books:")
-    st.write("퀴즈 생성기")
+    st.caption("주제 입력 후 원하시는 문제 유형을 선택해 주세요.")
     llm = ChatOpenAI(model="gpt-4o")
     context = st.text_area("주제를 입력해 주십시오.")
     language = st.radio("언어 선택",  ["English", "korean"])  # 언어 선택

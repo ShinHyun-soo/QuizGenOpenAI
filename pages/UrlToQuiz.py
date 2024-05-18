@@ -92,7 +92,7 @@ def main():
     # app config
     st.set_page_config(page_title="사이트 기반 문제 생성", page_icon="🤖")
     st.write(css, unsafe_allow_html=True)
-    st.header("퀴즈 생성기 :book")
+    st.header("QuizGen :books:")
     st.caption("url 입력 후 원하시는 문제를 선택하여 주십시오. ")
 
     language = st.radio(

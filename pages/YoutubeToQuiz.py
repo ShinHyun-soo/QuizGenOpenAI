@@ -42,7 +42,7 @@ def select_chunk_set(vectorstore, text_chunks, num_vectors=5):
 def main():
     st.set_page_config(page_title="Youtube 기반 문제 생성", page_icon="🤖")
     st.write(css, unsafe_allow_html=True)
-    st.header("QuizGen")
+    st.header("QuizGen :books:")
     st.caption("유튜브 주소 입력 후 원하시는 문제를 선택하여 주십시오. ")
     language = st.radio(
         "언어 선택",
