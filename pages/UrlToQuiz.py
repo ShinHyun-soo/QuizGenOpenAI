@@ -126,6 +126,9 @@ def main():
 
                 st.success('저장 완료!', icon="✅")
 
+                expander = st.expander("내용 확인")
+                expander.write(raw_text)
+
     # 퀴즈 유형 변경 시 상태 초기화
     if 'quiz_type' not in st.session_state or st.session_state.quiz_type != quiz_type:
         st.session_state.quiz_type = quiz_type

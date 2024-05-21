@@ -63,7 +63,7 @@ def main():
 
                 st.success('저장 완료!', icon="✅")
 
-                expander = st.expander("자막 확인")
+                expander = st.expander("내용 확인")
                 expander.write(raw_text)
 
     if website_url:
