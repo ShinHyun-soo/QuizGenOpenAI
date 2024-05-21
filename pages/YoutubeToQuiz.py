@@ -44,20 +44,12 @@ def main():
     st.write(css, unsafe_allow_html=True)
     st.header("QuizGen :books:")
     st.caption("유튜브 주소 입력 후 원하시는 문제를 선택하여 주십시오. ")
-    language = st.radio(
-        "언어 선택",
-        ["English", "Korean"],
-    )
-    quiz_type = st.radio(
-        "종류 선택",
-        ["객관식", "참/거짓", "주관식"],
-    )
-    num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
-    llm = ChatOpenAI(model="gpt-4o")
+
+
 
     with st.sidebar:
         st.header("유튜브 주소 입력 후 엔터를 눌러 주십시오.")
-        website_url = st.text_input("예시 : https://www.youtube.com/live/ko2Aav2fkxM?si=2LHvjUuaf8zurfXo")
+        website_url = st.text_input("예시 : https://www.youtube.com/~~~")
 
         if st.button("벡터 변환"):
             with st.spinner("변환 중"):
@@ -70,6 +62,26 @@ def main():
                 st.session_state.context = select_chunk_set(vectorstore, text_chunks)
 
                 st.success('저장 완료!', icon="✅")
+
+                expander = st.expander("자막 확인")
+                expander.write(raw_text)
+
+    if website_url:
+        expander = st.expander("영상 확인")
+        expander.video(website_url)
+
+
+
+    language = st.radio(
+        "언어 선택",
+        ["English", "Korean"],
+    )
+    quiz_type = st.radio(
+        "종류 선택",
+        ["객관식", "참/거짓", "주관식"],
+    )
+    num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
+    llm = ChatOpenAI(model="gpt-4o")
 
 
     if 'quiz_type' not in st.session_state or st.session_state.quiz_type != quiz_type:
