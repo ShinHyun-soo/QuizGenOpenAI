@@ -1,5 +1,10 @@
-### (2024-05-17)회의록 요약
+### (free/ online database server 찾기)
+- mongodb json format 저장, 조금 사용하면 무료
+- 마리아 db, 리눅스, 조금 사용하면 무료
+- 
 
+### (2024-05-17)회의록 요약
+https://github.com/MrBounty/streamlit-google-auth
 #### 변경 사항 및 요구사항
 1. **언어 지원**
    - 스페인어, 프랑스어 삭제 ✅
