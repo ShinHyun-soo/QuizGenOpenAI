@@ -14,7 +14,6 @@ footer {visibility: hidden;}
     left: 0;
     bottom: 0;
     width: 100%;
-    background-color: white;
     text-align: center;
     padding: 10px 0;
     font-size: 14px;
@@ -23,10 +22,10 @@ footer {visibility: hidden;}
 </style>
 """
 
-# Footer HTML
+# Footer HTML background-color: white;
 footer_html = """
 <div class="footer">
-  <p>Copyright 2024. QuizGen Co. all rights reserved.</p>
+  <p>ⓒ 2024. QuizGen. all rights reserved.</p>
 </div>
 """
 
