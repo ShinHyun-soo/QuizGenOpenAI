@@ -1,23 +1,24 @@
-from langchain.document_loaders import YoutubeLoader
-from langchain_openai import ChatOpenAI
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.chains import RetrievalQA
-from langchain.vectorstores import Chroma
-from dotenv import load_dotenv
 import streamlit as st
-import openai
+from dotenv import load_dotenv
+load_dotenv()
+
+from typing import List
+from langchain_community.document_loaders import WebBaseLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+from langchain.chains import LLMChain
 
 import sys
 sys.path.append('../')  # 상위 폴더를 시스템 경로에 추가
-from SubToQuiz import QuizMultipleChoice, QuizTrueFalse, QuizOpenEnded, create_quiz_chain, create_multiple_choice_template, create_true_false_template, create_open_ended_template
+from promptTemplates import QuizMultipleChoice, QuizTrueFalse, QuizOpenEnded, create_quiz_chain, create_multiple_choice_template, create_true_false_template, create_open_ended_template
 from htmlTemplates import css
 
-load_dotenv()
+
+##임시 업로드용 파일 TextToQuiz 구현 후 대체 해야함.
 
 def get_text_from_url(url):
-    loader = YoutubeLoader.from_youtube_url(url, add_video_info=False, language='ko')
+    loader = WebBaseLoader(url)
     document = loader.load()
     return document
 
@@ -39,17 +40,74 @@ def select_chunk_set(vectorstore, text_chunks, num_vectors=5):
     return context
 
 
+# def get_context_retriever_chain(vector_store):
+#     llm = ChatOpenAI()
+
+#     retriever = vector_store.as_retriever()
+
+#     prompt = ChatPromptTemplate.from_messages([
+#         MessagesPlaceholder(variable_name="chat_history"),
+#         ("user", "{input}"),
+#         ("user",
+#          "Given the above conversation, generate a search query to look up in order to get information relevant to the conversation")
+#     ])
+
+#     retriever_chain = create_history_aware_retriever(llm, retriever, prompt)
+
+#     return retriever_chain
+
+
+# def get_conversational_rag_chain(retriever_chain):
+#     llm = ChatOpenAI()
+
+#     prompt = ChatPromptTemplate.from_messages([
+#         ("system", "Answer the user's questions based on the below context:\n\n{context}"),
+#         MessagesPlaceholder(variable_name="chat_history"),
+#         ("user", "{input}"),
+#     ])
+
+#     stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
+
+#     return create_retrieval_chain(retriever_chain, stuff_documents_chain)
+
+
+
+# def get_response(user_input):
+#     retriever_chain = get_context_retriever_chain(st.session_state.vector_store)
+#     conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
+
+#     response = conversation_rag_chain.invoke({
+#         "chat_history": st.session_state.chat_history,
+#         "input": user_input
+#     })
+
+#     return response['answer']
+
 def main():
-    st.set_page_config(page_title="Youtube 기반 문제 생성", page_icon="🤖")
+    # app config
+    st.set_page_config(page_title="사이트 기반 문제 생성", page_icon="🤖")
     st.write(css, unsafe_allow_html=True)
     st.header("QuizGen :books:")
-    st.caption("유튜브 주소 입력 후 원하시는 문제를 선택하여 주십시오. ")
+    st.caption("url 입력 후 원하시는 문제를 선택하여 주십시오. ")
 
+    language = st.radio(
+            "언어 선택",
+            ["Korean", "English"],
+        )
+    quiz_type = st.radio(
+            "종류 선택",
+            ["객관식", "참/거짓", "주관식"],
+        )
+    num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
+    llm = ChatOpenAI(model="gpt-4o")
 
+    if "context" not in st.session_state:
+        st.session_state.context = None  # context 초기화
 
+    # sidebar
     with st.sidebar:
-        st.header("유튜브 주소 입력 후 엔터를 눌러 주십시오.")
-        website_url = st.text_input("예시 : https://www.youtube.com/~~~")
+        st.header("참고할 사이트 주소 입력.")
+        website_url = st.text_input("예시 : https://google.com")
 
         if st.button("벡터 변환"):
             with st.spinner("변환 중"):
@@ -66,30 +124,13 @@ def main():
                 expander = st.expander("내용 확인")
                 expander.write(raw_text)
 
-    if website_url:
-        expander = st.expander("영상 확인")
-        expander.video(website_url)
-
-
-
-    language = st.radio(
-        "언어 선택",
-        ["English", "Korean"],
-    )
-    quiz_type = st.radio(
-        "종류 선택",
-        ["객관식", "참/거짓", "주관식"],
-    )
-    num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
-    llm = ChatOpenAI(model="gpt-4o")
-
-
+    # 퀴즈 유형 변경 시 상태 초기화
     if 'quiz_type' not in st.session_state or st.session_state.quiz_type != quiz_type:
         st.session_state.quiz_type = quiz_type
         st.session_state.quiz_data = None
         st.session_state.user_answers = None
 
-    if st.button("퀴즈 생성"):
+    if st.button("문제 생성"):
         if st.session_state.context:
             if quiz_type == "객관식":
                 prompt_template = create_multiple_choice_template(language)
@@ -101,14 +142,13 @@ def main():
                 prompt_template = create_open_ended_template(language)
                 pydantic_object_schema = QuizOpenEnded
 
-            st.write("생성 중, 에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다 ㅎㅎ")
+            st.write("에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다.")
             chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
-            st.session_state.quiz_data = chain.invoke(
-                {"num_questions": num_questions, "quiz_context": st.session_state.context})
-            st.session_state.user_answers = [None] * len(
-                st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
+            st.session_state.quiz_data = chain.invoke({"num_questions": num_questions, "quiz_context": st.session_state.context})
+            st.session_state.user_answers = [None] * len(st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
         else:
             st.write("url이 입력 되지 않았습니다.")
+
 
     if 'quiz_data' in st.session_state and st.session_state.quiz_data:
         user_answers = {}
@@ -116,10 +156,10 @@ def main():
             st.write(f"**{idx + 1}. {question}**")
             if quiz_type != "주관식":
                 options = st.session_state.quiz_data.alternatives[idx]
-                user_answer_key = st.radio("Select an answer:", options, key=idx)
+                user_answer_key = st.radio("답:", options, key=idx)
                 user_answers[idx] = user_answer_key
             else:
-                user_answers[idx] = st.text_area("Your answer:", key=idx)
+                user_answers[idx] = st.text_area("답:", key=idx)
 
         if st.button("채점"):
             score = 0
@@ -136,10 +176,6 @@ def main():
             for correct_answer in correct_answers:
                 expander.write(correct_answer)
 
-
+        
 if __name__ == "__main__":
     main()
-
-
-
-

@@ -119,12 +119,14 @@ def create_open_ended_template(language):
     prompt = ChatPromptTemplate.from_template(template)
     return prompt
 
+
+
 def main():
-    st.title("QuizGen:books:")
+    st.header("QuizGen:books:")
     st.caption("주제 입력 후 원하시는 문제 유형을 선택해 주세요.")
     llm = ChatOpenAI(model="gpt-4o")
     context = st.text_area("주제를 입력해 주십시오.")
-    language = st.radio("언어 선택",  ["English", "korean"])  # 언어 선택
+    language = st.radio("언어 선택",  ["Korean", "English"])  # 언어 선택
     quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"])
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
 
