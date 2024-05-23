@@ -26,7 +26,7 @@ footer {visibility: hidden;}
 # Footer HTML
 footer_html = """
 <div class="footer">
-  <p>Copyright 2024. hyun5oo. all rights reserved.</p>
+  <p>Copyright 2024. QuizGen Co. all rights reserved.</p>
 </div>
 """
 
