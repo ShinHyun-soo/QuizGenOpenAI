@@ -6,9 +6,9 @@ st.title("QuizGen :books:")
 
 st.write("좌측에서 첨부할 문제 내용을 선택하여 주시기 바랍니다.")
 
-st.header("Sponsored by")
+st.caption("Sponsored by")
 
-st.image('hsu.png')
+st.image('hsu.png', width=200)
 
 # Custom CSS for the footer
 footer_css = """
