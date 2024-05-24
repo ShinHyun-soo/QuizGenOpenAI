@@ -70,18 +70,25 @@ def main():
         expander = st.expander("영상 확인")
         expander.video(website_url)
 
+    llm = ChatOpenAI(model="gpt-3.5-turbo")
+    on = st.toggle("GPT-4o")
+    if on:
+        llm = ChatOpenAI(model="gpt-4o")
+    col1, col2, col3 = st.columns(3)
 
+    # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
+    with col3:
+        difficulty = st.radio("난이도", ["easy", "normal", "hard"])
 
-    language = st.radio(
-        "언어 선택",
-        ["Korean", "English"],
-    )
-    quiz_type = st.radio(
-        "종류 선택",
-        ["객관식", "참/거짓", "주관식"],
-    )
+    # 두 번째 컬럼에 언어 선택 라디오 버튼을 배치합니다.
+    with col1:
+        language = st.radio("언어 선택", ["Korean", "English"])  # 언어 선택
+
+    # 세 번째 컬럼에 종류 선택 라디오 버튼을 배치합니다.
+    with col2:
+        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"])
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
-    llm = ChatOpenAI(model="gpt-4o")
+    user_input = st.text_area("기타 요구 사항을 입력해 주십시오.")
 
 
     if 'quiz_type' not in st.session_state or st.session_state.quiz_type != quiz_type:
@@ -92,19 +99,19 @@ def main():
     if st.button("퀴즈 생성"):
         if st.session_state.context:
             if quiz_type == "객관식":
-                prompt_template = create_multiple_choice_template(language)
+                prompt_template = create_multiple_choice_template(language, user_input)
                 pydantic_object_schema = QuizMultipleChoice
             elif quiz_type == "참/거짓":
-                prompt_template = create_true_false_template(language)
+                prompt_template = create_true_false_template(language, user_input)
                 pydantic_object_schema = QuizTrueFalse
             else:
-                prompt_template = create_open_ended_template(language)
+                prompt_template = create_open_ended_template(language, user_input)
                 pydantic_object_schema = QuizOpenEnded
 
             st.write("생성 중, 에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다 ㅎㅎ")
             chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
             st.session_state.quiz_data = chain.invoke(
-                {"num_questions": num_questions, "quiz_context": st.session_state.context})
+                {"num_questions": num_questions, "quiz_context": st.session_state.context, "difficulty": difficulty})
             st.session_state.user_answers = [None] * len(
                 st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
         else:
