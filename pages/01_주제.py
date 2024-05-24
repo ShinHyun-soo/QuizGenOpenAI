@@ -134,7 +134,7 @@ def create_open_ended_template(language, user_input=None):
 
 def main():
     st.header("QuizGen:books:")
-    st.caption("주제 입력 후 원하시는 문제 유형을 선택해 주세요.")
+    st.caption("주제 입력 후 원하시는 문제 유형을 선택하여 주십시오.")
     llm = ChatOpenAI(model="gpt-3.5-turbo")
     on = st.toggle("GPT-4o")
     if on:
