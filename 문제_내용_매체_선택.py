@@ -1,70 +1,104 @@
 import streamlit as st
 
-# Page title and instructions
+from htmlTemplates import footer_css, footer_html
+import pandas as pd
+# Security
+#passlib,hashlib,bcrypt,scrypt
+import hashlib
+def make_hashes(password):
+    return hashlib.sha256(str.encode(password)).hexdigest()
 
-st.title("QuizGen :books:")
+def check_hashes(password,hashed_text):
+    if make_hashes(password) == hashed_text:
+        return hashed_text
+    return False
+# DB Management
+import sqlite3
+conn = sqlite3.connect('data.db')
+c = conn.cursor()
+# DB  Functions
+def create_usertable():
+    c.execute('CREATE TABLE IF NOT EXISTS userstable(username TEXT,password TEXT)')
 
-st.write("좌측에서 문제 생성에 참고할 파일 유형을 선택하여 주십시오.")
 
-st.caption("Sponsored by")
+def add_userdata(username,password):
+    c.execute('INSERT INTO userstable(username,password) VALUES (?,?)',(username,password))
+    conn.commit()
 
-st.image('hsu.png', width=200)
+def login_user(username,password):
+    c.execute('SELECT * FROM userstable WHERE username =? AND password = ?',(username,password))
+    data = c.fetchall()
+    return data
 
-from streamlit_google_auth import Authenticate
 
-#google_credentials = st.secrets["GOOGLE_CREDENTIALS"]
+def view_all_users():
+    c.execute('SELECT * FROM userstable')
+    data = c.fetchall()
+    return data
 
 
-authenticator = Authenticate(
-    secret_credentials_path = 'google_credentials.json',
-    cookie_name='my_cookie_name',
-    cookie_key='this_is_secret',
-    redirect_uri = 'https://quiz-bot-4.streamlit.app/',
-)
 
-# Catch the login event
-authenticator.check_authentification()
+def main():
+    st.title("QuizGen :books:")
 
-# Create the login button
-authenticator.login()
+    st.write("좌측에서 문제 생성에 참고할 파일 유형을 선택하여 주십시오.")
 
-if st.session_state['connected']:
-    st.image(st.session_state['user_info'].get('picture'))
-    st.write('Hello, '+ st.session_state['user_info'].get('name'))
-    st.write('Your email is '+ st.session_state['user_info'].get('email'))
-    if st.button('Log out'):
-        authenticator.logout()
+    menu = ["Login","SignUp"]
+    choice = st.selectbox("Menu",menu)
 
-# Custom CSS for the footer
-footer_css = """
-<style>
-# MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-.footer {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 14px;
-    color: #333;
-}
-</style>
-"""
+    if choice == "Login":
+        st.subheader("로그인")
 
-# Footer HTML background-color: white;
-footer_html = """
-<div class="footer">
-  <p>ⓒ 2024. QuizGen. all rights reserved.</p>
-</div>
-"""
+        username = st.text_input("User Name")
+        password = st.text_input("Password",type='password')
+        if st.checkbox("Login"):
+            # if password == '12345':
+            create_usertable()
+            hashed_pswd = make_hashes(password)
 
-# Inject CSS with markdown
-st.markdown(footer_css, unsafe_allow_html=True)
+            result = login_user(username,check_hashes(password,hashed_pswd))
+            if result:
 
-# Inject footer HTML with markdown
-st.markdown(footer_html, unsafe_allow_html=True)
+                st.success("{}으로 로그인 되었습니다.".format(username))
+
+                task = st.selectbox("마이페이지",["프로필","미구현1","미구현2"])
+                if task == "미구현1":
+                    st.subheader("아직 구현 되지 않은 기능입니다.")
+
+                elif task == "미구현2":
+                    st.subheader("아직 구현 되지 않은 기능입니다.")
+                elif task == "프로필":
+                    st.subheader("{} 프로필".format(username))
+                    user_result = view_all_users()
+                    clean_db = pd.DataFrame(user_result,columns=["Username","Password"])
+                    st.dataframe(clean_db)
+            else:
+                st.warning("Incorrect Username/Password")
+
+    elif choice == "SignUp":
+        st.subheader("회원가입")
+        new_user = st.text_input("Username")
+        new_password = st.text_input("Password",type='password')
+
+        if st.button("Signup"):
+            create_usertable()
+            add_userdata(new_user,make_hashes(new_password))
+            st.success("You have successfully created a valid Account")
+            st.info("Go to Login Menu to login")
+
+    st.caption("Sponsored by")
+
+    st.image('hsu.png', width=200)
+
+    # Inject CSS with markdown
+    st.markdown(footer_css, unsafe_allow_html=True)
+
+    # Inject footer HTML with markdown
+    st.markdown(footer_html, unsafe_allow_html=True)
+
+if __name__ == '__main__':
+    main()
+
 
 
 

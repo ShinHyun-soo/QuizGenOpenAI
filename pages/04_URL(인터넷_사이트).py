@@ -12,7 +12,7 @@ from langchain.chains import LLMChain
 import sys
 sys.path.append('../')  # 상위 폴더를 시스템 경로에 추가
 from promptTemplates import QuizMultipleChoice, QuizTrueFalse, QuizOpenEnded, create_quiz_chain, create_multiple_choice_template, create_true_false_template, create_open_ended_template
-from htmlTemplates import css
+from htmlTemplates import css, footer_css, footer_html
 
 
 ##임시 업로드용 파일 TextToQuiz 구현 후 대체 해야함.
@@ -38,50 +38,6 @@ def select_chunk_set(vectorstore, text_chunks, num_vectors=5):
     # 선택된 텍스트 청크들을 하나의 문자열로 결합
     context = ' '.join(chunk.page_content for chunk in chunks)
     return context
-
-
-# def get_context_retriever_chain(vector_store):
-#     llm = ChatOpenAI()
-
-#     retriever = vector_store.as_retriever()
-
-#     prompt = ChatPromptTemplate.from_messages([
-#         MessagesPlaceholder(variable_name="chat_history"),
-#         ("user", "{input}"),
-#         ("user",
-#          "Given the above conversation, generate a search query to look up in order to get information relevant to the conversation")
-#     ])
-
-#     retriever_chain = create_history_aware_retriever(llm, retriever, prompt)
-
-#     return retriever_chain
-
-
-# def get_conversational_rag_chain(retriever_chain):
-#     llm = ChatOpenAI()
-
-#     prompt = ChatPromptTemplate.from_messages([
-#         ("system", "Answer the user's questions based on the below context:\n\n{context}"),
-#         MessagesPlaceholder(variable_name="chat_history"),
-#         ("user", "{input}"),
-#     ])
-
-#     stuff_documents_chain = create_stuff_documents_chain(llm, prompt)
-
-#     return create_retrieval_chain(retriever_chain, stuff_documents_chain)
-
-
-
-# def get_response(user_input):
-#     retriever_chain = get_context_retriever_chain(st.session_state.vector_store)
-#     conversation_rag_chain = get_conversational_rag_chain(retriever_chain)
-
-#     response = conversation_rag_chain.invoke({
-#         "chat_history": st.session_state.chat_history,
-#         "input": user_input
-#     })
-
-#     return response['answer']
 
 def main():
     # app config
@@ -185,30 +141,6 @@ def main():
             expander = st.expander("정답 보기")
             for correct_answer in correct_answers:
                 expander.write(correct_answer)
-
-    footer_css = """
-    <style>
-    # MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    .footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        font-size: 14px;
-        color: #333;
-    }
-    </style>
-    """
-
-    # Footer HTML background-color: white;
-    footer_html = """
-    <div class="footer">
-      <p>ⓒ 2024. QuizGen. all rights reserved.</p>
-    </div>
-    """
 
     # Inject CSS with markdown
     st.markdown(footer_css, unsafe_allow_html=True)

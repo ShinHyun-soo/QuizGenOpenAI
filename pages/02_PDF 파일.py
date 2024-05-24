@@ -17,7 +17,7 @@ import numpy as np
 import sys
 sys.path.append('../')  # 상위 폴더를 시스템 경로에 추가
 from promptTemplates import QuizMultipleChoice, QuizTrueFalse, QuizOpenEnded, create_quiz_chain, create_multiple_choice_template, create_true_false_template, create_open_ended_template
-from htmlTemplates import css, bot_template
+from htmlTemplates import css, footer_css, footer_html
 
 st.set_page_config(page_title="PDF 기반 문제 생성",
                        page_icon=":books:")
@@ -163,30 +163,6 @@ def main():
             expander = st.expander("정답 보기")
             for correct_answer in correct_answers:
                 expander.write(correct_answer)
-
-    footer_css = """
-    <style>
-    # MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    .footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-        font-size: 14px;
-        color: #333;
-    }
-    </style>
-    """
-
-    # Footer HTML background-color: white;
-    footer_html = """
-    <div class="footer">
-      <p>ⓒ 2024. QuizGen. all rights reserved.</p>
-    </div>
-    """
 
     # Inject CSS with markdown
     st.markdown(footer_css, unsafe_allow_html=True)

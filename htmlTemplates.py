@@ -25,20 +25,26 @@ css = '''
 }
 '''
 
-bot_template = '''
-<div class="chat-message bot">
-    <div class="avatar">
-        <img src="https://static.thenounproject.com/png/5862232-200.png">
-    </div>
-    <div class="message">{{MSG}}</div>
-</div>
-'''
+footer_css = """
+    <style>
+    # MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 14px;
+        color: #333;
+    }
+    </style>
+    """
 
-user_template = '''
-<div class="chat-message user">
-    <div class="avatar">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThL_-PeQELTCgDcMrx7NnHcHB3TpNdlRwO-f6QB7-c8e9_Uh0W2H2H7mEcAg&s">
-    </div>
-    <div class="message">{{MSG}}</div>
+# Footer HTML background-color: white;
+footer_html = """
+<div class="footer">
+  <p>ⓒ 2024. QuizGen. all rights reserved.</p>
 </div>
-'''
+"""
