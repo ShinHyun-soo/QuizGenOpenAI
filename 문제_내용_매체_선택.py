@@ -12,7 +12,7 @@ st.image('hsu.png', width=200)
 
 from streamlit_google_auth import Authenticate
 
-google_credentials = st.secrets["GOOGLE_CREDENTIALS"]
+#google_credentials = st.secrets["GOOGLE_CREDENTIALS"]
 
 st.title('Streamlit Google Auth Example')
 
