@@ -45,35 +45,32 @@ def main():
     st.header("QuizGen :books:")
     st.caption("유튜브 주소 입력 후 원하시는 문제를 선택하여 주십시오. ")
 
+    llm = ChatOpenAI(model="gpt-3.5-turbo")
+    on = st.toggle("GPT-4o")
+    if on:
+        llm = ChatOpenAI(model="gpt-4o")
 
+    website_url = st.text_input("유튜브 Url 입력란")
 
-    with st.sidebar:
-        st.header("유튜브 주소 입력 후 엔터를 눌러 주십시오.")
-        website_url = st.text_input("예시 : https://www.youtube.com/~~~")
+    if st.button("입력"):
+        with st.spinner("입력 중"):
+            raw_text = get_text_from_url(website_url)
 
-        if st.button("벡터 변환"):
-            with st.spinner("변환 중"):
-                raw_text = get_text_from_url(website_url)
+            text_chunks = process_text_to_chunks(raw_text)
 
-                text_chunks = process_text_to_chunks(raw_text)
+            vectorstore = create_vector_store(text_chunks)
 
-                vectorstore = create_vector_store(text_chunks)
+            st.session_state.context = select_chunk_set(vectorstore, text_chunks)
 
-                st.session_state.context = select_chunk_set(vectorstore, text_chunks)
+            st.success('저장 완료!', icon="✅")
 
-                st.success('저장 완료!', icon="✅")
-
-                expander = st.expander("내용 확인")
-                expander.write(raw_text)
+            expander = st.expander("내용 확인")
+            expander.write(raw_text)
 
     if website_url:
         expander = st.expander("영상 확인")
         expander.video(website_url)
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo")
-    on = st.toggle("GPT-4o")
-    if on:
-        llm = ChatOpenAI(model="gpt-4o")
     col1, col2, col3 = st.columns(3)
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.

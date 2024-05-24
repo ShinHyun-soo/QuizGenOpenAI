@@ -94,6 +94,24 @@ def main():
     on = st.toggle("GPT-4o")
     if on:
         llm = ChatOpenAI(model="gpt-4o")
+
+    website_url = st.text_input("Url 입력란")
+
+    if st.button("입력"):
+        with st.spinner("입력 중"):
+            raw_text = get_text_from_url(website_url)
+
+            text_chunks = process_text_to_chunks(raw_text)
+
+            vectorstore = create_vector_store(text_chunks)
+
+            st.session_state.context = select_chunk_set(vectorstore, text_chunks)
+
+            st.success('저장 완료!', icon="✅")
+
+            expander = st.expander("내용 확인")
+            expander.write(raw_text)
+
     col1, col2, col3 = st.columns(3)
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
@@ -113,25 +131,8 @@ def main():
     if "context" not in st.session_state:
         st.session_state.context = None  # context 초기화
 
-    # sidebar
-    with st.sidebar:
-        st.header("참고할 사이트 주소 입력.")
-        website_url = st.text_input("예시 : https://google.com")
 
-        if st.button("벡터 변환"):
-            with st.spinner("변환 중"):
-                raw_text = get_text_from_url(website_url)
 
-                text_chunks = process_text_to_chunks(raw_text)
-
-                vectorstore = create_vector_store(text_chunks)
-
-                st.session_state.context = select_chunk_set(vectorstore, text_chunks)
-
-                st.success('저장 완료!', icon="✅")
-
-                expander = st.expander("내용 확인")
-                expander.write(raw_text)
 
     # 퀴즈 유형 변경 시 상태 초기화
     if 'quiz_type' not in st.session_state or st.session_state.quiz_type != quiz_type:

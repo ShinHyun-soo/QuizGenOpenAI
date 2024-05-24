@@ -65,10 +65,29 @@ def main():
     st.header("QuizGen :books:")
     st.caption("파일 업로드 후 원하시는 선택 사항을 선택하여 주십시오. ")
 
+
     llm = ChatOpenAI(model="gpt-3.5-turbo")
     on = st.toggle("GPT-4o")
     if on:
         llm = ChatOpenAI(model="gpt-4o")
+
+    pdf_docs = st.file_uploader(
+        "다수의 PDF 문서 업로드를 지원합니다.", accept_multiple_files=True, type=["pdf"])
+    if st.button("입력"):
+        with st.spinner("입력 중"):
+            raw_text = get_pdf_text(pdf_docs)
+
+            text_chunks = get_text_chunks(raw_text)
+
+            vectorstore = get_vectorstore(text_chunks)
+
+            st.session_state.context = select_chunk_set(vectorstore, text_chunks)
+
+            st.success('변환 완료!', icon="✅")
+
+            expander = st.expander("내용 확인")
+            expander.write(raw_text)
+
     col1, col2, col3 = st.columns(3)
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
@@ -88,23 +107,8 @@ def main():
     if "context" not in st.session_state:
         st.session_state.context = None  # context 초기화
         
-    with st.sidebar:
-        pdf_docs = st.file_uploader(
-            "PDF 문서 여러개 업로드 가능.", accept_multiple_files=True, type=["pdf"])
-        if st.button("벡터 변환"):
-            with st.spinner("변환 중"):
-                raw_text = get_pdf_text(pdf_docs)
 
-                text_chunks = get_text_chunks(raw_text)
 
-                vectorstore = get_vectorstore(text_chunks)
-
-                st.session_state.context = select_chunk_set(vectorstore, text_chunks)
-
-                st.success('변환 완료!', icon="✅")
-
-                expander = st.expander("내용 확인")
-                expander.write(raw_text)
 
     
     # 퀴즈 유형 변경 시 상태 초기화
