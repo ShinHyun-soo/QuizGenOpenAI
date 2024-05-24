@@ -31,8 +31,8 @@ def login_user(username,password):
     return data
 
 
-def view_all_users():
-    c.execute('SELECT * FROM userstable')
+def view_login_users(username):
+    c.execute('SELECT * FROM userstable WHERE username =?', (username,))
     data = c.fetchall()
     return data
 
@@ -69,7 +69,7 @@ def main():
                     st.subheader("아직 구현 되지 않은 기능입니다.")
                 elif task == "프로필":
                     st.subheader("{} 프로필".format(username))
-                    user_result = view_all_users()
+                    user_result = view_login_users(username)
                     clean_db = pd.DataFrame(user_result,columns=["Username","Password"])
                     st.dataframe(clean_db)
             else:
