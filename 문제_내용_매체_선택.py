@@ -19,7 +19,7 @@ authenticator = Authenticate(
     secret_credentials_path = 'google_credentials.json',
     cookie_name='my_cookie_name',
     cookie_key='this_is_secret',
-    redirect_uri = 'https://quiz-bot-4.streamlit.app',
+    redirect_uri = 'https://quiz-bot-4.streamlit.app/',
 )
 
 # Catch the login event
