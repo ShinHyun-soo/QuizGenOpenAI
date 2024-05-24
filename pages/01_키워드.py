@@ -134,12 +134,12 @@ def create_open_ended_template(language, user_input=None):
 
 def main():
     st.header("QuizGen:books:")
-    st.caption("주제 입력 후 원하시는 문제 유형을 선택하여 주십시오.")
+    st.caption("키워드 입력 후 원하시는 문제 유형을 선택하여 주십시오.")
     llm = ChatOpenAI(model="gpt-3.5-turbo")
     on = st.toggle("GPT-4o")
     if on:
         llm = ChatOpenAI(model="gpt-4o")
-    context = st.text_area("주제를 입력해 주십시오.")
+    context = st.text_area("키워드를 입력해 주십시오.")
     col1, col2, col3 = st.columns(3)
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.

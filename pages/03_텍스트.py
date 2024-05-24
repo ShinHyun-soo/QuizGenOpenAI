@@ -52,14 +52,14 @@ def main():
     st.write(css, unsafe_allow_html=True)
 
     st.header("QuizGen :books:")
-    st.caption("Text 업로드 후 원하시는 문제를 선택하여 주십시오. ")
+    st.caption("Text(긴 글) 업로드 후 원하시는 문제를 선택하여 주십시오. ")
 
     llm = ChatOpenAI(model="gpt-3.5-turbo")
     on = st.toggle("GPT-4o")
     if on:
         llm = ChatOpenAI(model="gpt-4o")
 
-    raw_text = st.text_area("텍스트 입력란", height=150)
+    raw_text = st.text_area("텍스트(긴 글) 입력란", height=150)
     if st.button("입력"):
         with st.spinner("입력 중"):
             text_chunks = get_text_chunks(raw_text)
