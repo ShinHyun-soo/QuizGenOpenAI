@@ -92,15 +92,15 @@ def main():
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
     with col3:
-        difficulty = st.radio("난이도", ["easy", "normal", "hard"])
+        difficulty = st.radio("난이도", ["easy", "normal", "hard"], index=None)
 
     # 두 번째 컬럼에 언어 선택 라디오 버튼을 배치합니다.
     with col1:
-        language = st.radio("언어 선택", ["Korean", "English"])  # 언어 선택
+        language = st.radio("언어 선택", ["Korean", "English"], index=None)  # 언어 선택
 
     # 세 번째 컬럼에 종류 선택 라디오 버튼을 배치합니다.
     with col2:
-        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"])
+        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"], index=None)
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
     user_input = st.text_area("기타 요구 사항을 입력해 주십시오.")
 
