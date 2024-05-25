@@ -72,15 +72,15 @@ def main():
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
     with col3:
-        difficulty = st.radio("난이도", ["easy", "normal", "hard"], index=None)
+        difficulty = st.radio("난이도", ["easy", "normal", "hard"])
 
     # 두 번째 컬럼에 언어 선택 라디오 버튼을 배치합니다.
     with col1:
-        language = st.radio("언어 선택", ["Korean", "English"], index=None)  # 언어 선택
+        language = st.radio("언어 선택", ["Korean", "English"])  # 언어 선택
 
     # 세 번째 컬럼에 종류 선택 라디오 버튼을 배치합니다.
     with col2:
-        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"], index=None)
+        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"])
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
     user_input = st.text_area("기타 요구 사항을 입력해 주십시오.")
 
@@ -99,19 +99,19 @@ def main():
     if st.button("문제 생성"):
         if st.session_state.context:
             if quiz_type == "객관식":
-                prompt_template = create_multiple_choice_template(language, user_input)
+                prompt_template = create_multiple_choice_template(language)
                 pydantic_object_schema = QuizMultipleChoice
             elif quiz_type == "참/거짓":
-                prompt_template = create_true_false_template(language, user_input)
+                prompt_template = create_true_false_template(language)
                 pydantic_object_schema = QuizTrueFalse
             else:
-                prompt_template = create_open_ended_template(language, user_input)
+                prompt_template = create_open_ended_template(language)
                 pydantic_object_schema = QuizOpenEnded
 
             st.write("(생성 중) 에러 발생시, 생성 버튼을 다시 눌러 주십시오.")
             chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
             st.session_state.quiz_data = chain.invoke(
-                {"num_questions": num_questions, "quiz_context": st.session_state.context, "difficulty": difficulty})
+                {"num_questions": num_questions, "quiz_context": st.session_state.context, "difficulty": difficulty, "user_input": user_input})
             st.session_state.user_answers = [None] * len(
                 st.session_state.quiz_data.questions) if st.session_state.quiz_data else []
         else:

@@ -86,9 +86,9 @@ def main():
             st.success("You have successfully created a valid Account")
             st.info("Go to Login Menu to login")
 
-    st.caption("Sponsored by")
+    #st.caption("Sponsored by")
 
-    st.image('hsu.png', width=200)
+    #st.image('hsu.png', width=200)
 
     # Inject CSS with markdown
     st.markdown(footer_css, unsafe_allow_html=True)

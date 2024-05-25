@@ -24,11 +24,13 @@ def create_quiz_chain(prompt_template, llm, pydantic_object_schema):
     return prompt_template | llm.with_structured_output(pydantic_object_schema)
 
 
-def create_multiple_choice_template(language, user_input=None):
+def create_multiple_choice_template(language):
     """Create the prompt template for the quiz app, including conditional translation."""
     template = """ 
     You are an expert quiz maker for technical fields. Let's think step by step and
     create a {difficulty} quiz with {num_questions} multiple-choice questions about the following concept/content: {quiz_context}.
+
+    {user_input}
 
     The format of the quiz should be as follows:
 
@@ -52,19 +54,19 @@ def create_multiple_choice_template(language, user_input=None):
     if language != "English":
         template += f"\n\nPlease ensure that the quiz is accurately translated into {language}, maintaining the technical accuracy and clarity of the questions and options."
 
-    if user_input != None:
-        template += f"\n\n {user_input}"
 
     prompt = ChatPromptTemplate.from_template(template)
     return prompt
 
 
-def create_true_false_template(language, user_input=None):
+def create_true_false_template(language):
     """Create the prompt template for the quiz app."""
 
     template = """
     You are an expert quiz maker for technical fields. Let's think step by step and
     create a {difficulty} quiz with {num_questions} questions about the following concept/content: {quiz_context}.
+    
+    {user_input}
 
     The format of the quiz could be one of the following:
     - True-false:
@@ -87,17 +89,17 @@ def create_true_false_template(language, user_input=None):
     if language != "English":
         template += f"\n\nPlease ensure that the quiz is accurately translated into {language}, maintaining the technical accuracy and clarity of the questions and options."
 
-    if user_input != None:
-        template += f"\n\n {user_input}"
 
     prompt = ChatPromptTemplate.from_template(template)
     return prompt
 
 
-def create_open_ended_template(language, user_input=None):
+def create_open_ended_template(language):
     template = """
     You are an expert quiz maker for technical fields. Let's think step by step and
     create a quiz with {num_questions} questions about the following concept/content: {quiz_context}.
+    
+    {user_input}
 
     The format of the quiz could be one of the following:
     - Open-ended:
@@ -117,8 +119,6 @@ def create_open_ended_template(language, user_input=None):
     if language != "English":
         template += f"\n\nPlease ensure that the quiz is accurately translated into {language}, maintaining the technical accuracy and clarity of the questions and options."
 
-    if user_input != None:
-        template += f"\n\n {user_input}"
 
     prompt = ChatPromptTemplate.from_template(template)
     return prompt
