@@ -96,6 +96,32 @@ def main():
     # Inject footer HTML with markdown
     st.markdown(footer_html, unsafe_allow_html=True)
 
+    from streamlit_google_auth import Authenticate
+    import json
+
+    #google_credentials = st.secrets["GOOGLE_CREDENTIALS"]
+
+
+    authenticator = Authenticate(
+        secret_credentials_path='google_credentials.json',
+        cookie_name='my_cookie_name',
+        cookie_key='this_is_secret',
+        redirect_uri='http://localhost:8501',
+    )
+
+    # Catch the login event
+    authenticator.check_authentification()
+
+    # Create the login button
+    authenticator.login()
+
+    if st.session_state['connected']:
+        st.image(st.session_state['user_info'].get('picture'))
+        st.write('Hello, ' + st.session_state['user_info'].get('name'))
+        st.write('Your email is ' + st.session_state['user_info'].get('email'))
+        if st.button('Log out'):
+            authenticator.logout()
+
 if __name__ == '__main__':
     main()
 
