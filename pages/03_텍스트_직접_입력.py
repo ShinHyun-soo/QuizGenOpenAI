@@ -53,10 +53,6 @@ def main():
     st.header("QuizGen :books:")
     st.caption("Text(긴 글) 업로드 후 원하시는 문제를 선택하여 주십시오. ")
 
-    llm = ChatOpenAI(model="gpt-3.5-turbo")
-    on = st.toggle("GPT-4o")
-    if on:
-        llm = ChatOpenAI(model="gpt-4o")
 
     raw_text = st.text_area("텍스트(긴 글) 입력란", height=150)
     if st.button("입력"):
@@ -68,7 +64,7 @@ def main():
             st.session_state.context = select_chunk_set(vectorstore, text_chunks)
 
             st.success('저장 완료!', icon="✅")
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
     with col3:
@@ -81,8 +77,24 @@ def main():
     # 세 번째 컬럼에 종류 선택 라디오 버튼을 배치합니다.
     with col2:
         quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"])
+
+    with col4:
+        llm_type = st.radio("LLM", ["Llama-3", "GPT-3.5-Turbo", "GPT-4", "GPT-4o"])
+
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
     user_input = st.text_area("기타 요구 사항을 입력해 주십시오.")
+
+    if llm_type == "Llama-3":
+        llm = ChatOpenAI(model="gpt-4o")
+
+    if llm_type == "GPT-3.5-Turbo":
+        llm = ChatOpenAI(model="gpt-4o")
+
+    if llm_type == "GPT-4":
+        llm = ChatOpenAI(model="gpt-4o")
+
+    if llm_type == "GPT-4o":
+        llm = ChatOpenAI(model="gpt-4o")
 
     if "context" not in st.session_state:
         st.session_state.context = None  # context 초기화
