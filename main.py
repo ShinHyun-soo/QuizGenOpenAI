@@ -1,0 +1,72 @@
+import streamlit as st
+
+from streamlit_option_menu import option_menu
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+import auth, kwd, pdf, txt, url, ytb
+
+# st.set_page_config(
+#     page_title="Pondering",
+# )
+
+st.markdown(
+    """
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src=f"https://www.googletagmanager.com/gtag/js?id={os.getenv('analytics_tag')}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', os.getenv('analytics_tag'));
+        </script>
+    """, unsafe_allow_html=True)
+print(os.getenv('analytics_tag'))
+
+
+class MultiApp:
+
+    def __init__(self):
+        self.apps = []
+
+    def add_app(self, title, func):
+
+        self.apps.append({
+            "title": title,
+            "function": func
+        })
+
+    def run():
+        # app = st.sidebar(
+        with st.sidebar:
+            app = option_menu(
+                menu_title='문제 출제 소스 ',
+                options=['주제어/키워드', 'PDF 파일', '텍스트 집적 입력', 'URL(인터넷 사이트)', 'YouTube 링크', '로그인'],
+                icons=['house-fill', 'person-circle', 'trophy-fill', 'chat-fill', 'info-circle-fill', 'info-circle-fill'],
+                menu_icon='chat-text-fill',
+                default_index=1,
+                styles={
+                    "container": {"padding": "5!important", "background-color": 'gray'},
+                    "icon": {"color": "white", "font-size": "23px"},
+                    "nav-link": {"color": "white", "font-size": "20px", "text-align": "left", "margin": "0px",
+                                 "--hover-color": "blue"},
+                    "nav-link-selected": {"background-color": "#02ab21"}, }
+
+            )
+
+        if app == "주제어/키워드":
+            kwd.main()
+        if app == "PDF 파일":
+            pdf.main()
+        if app == "텍스트 집적 입력":
+            txt.main()
+        if app == 'URL(인터넷 사이트)':
+            url.main()
+        if app == 'YouTube 링크':
+            ytb.main()
+        if app == '로그인':
+            auth.main()
+
+    run()

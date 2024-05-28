@@ -10,7 +10,7 @@ from langchain_openai import ChatOpenAI
 from langchain.pydantic_v1 import BaseModel, Field
 
 import sys
-sys.path.append('../')  # 상위 폴더를 시스템 경로에 추가
+sys.path.append('/')  # 상위 폴더를 시스템 경로에 추가
 from promptTemplates import QuizMultipleChoice, QuizTrueFalse, QuizOpenEnded, create_quiz_chain, create_multiple_choice_template, create_true_false_template, create_open_ended_template
 from htmlTemplates import css
 from htmlTemplates import css, footer_css, footer_html
@@ -20,7 +20,7 @@ from htmlTemplates import css, footer_css, footer_html
 def main():
     st.header("QuizGen:books:")
     st.caption("키워드 입력 후 원하시는 문제 유형을 선택하여 주십시오.")
-    context = st.text_input("키워드를 입력해 주십시오.")
+    context = st.text_input("키워드를 입력해 주십시오. 예) 랭체인")
     col1, col2, col3, col4 = st.columns(4)
 
     # 첫 번째 컬럼에 난이도 선택 라디오 버튼을 배치합니다.
