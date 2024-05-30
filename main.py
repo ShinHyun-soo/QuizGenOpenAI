@@ -2,9 +2,8 @@ import streamlit as st
 
 from streamlit_option_menu import option_menu
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 import auth, kwd, pdf, txt, url, ytb
 
@@ -32,7 +31,6 @@ class MultiApp:
         self.apps = []
 
     def add_app(self, title, func):
-
         self.apps.append({
             "title": title,
             "function": func
