@@ -44,8 +44,8 @@ class MultiApp:
             app = option_menu(
                 menu_title='문제 출제 소스 ',
                 options=['토픽/주제', '텍스트 입력',  'PDF 파일', 'URL 주소', 'YouTube 링크', '로그인'],
-                icons=['chat-fill', 'chat-fill', 'file', 'link', 'link', 'person-circle'],
-                menu_icon='chat-text-fill',
+                icons=['chat-text-fill', 'chat-text-fill', 'file', 'link', 'link', 'person-circle'],
+                menu_icon='',
                 default_index=0,
                 styles={
                     "container": {"padding": "5!important", "background-color": 'lightgray'},
