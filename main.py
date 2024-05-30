@@ -44,13 +44,13 @@ class MultiApp:
             app = option_menu(
                 menu_title='문제 출제 소스 ',
                 options=['토픽/주제', '텍스트 입력',  'PDF 파일', 'URL 주소', 'YouTube 링크', '로그인'],
-                icons=['chat-fill', 'chat-fill', 'file-folder', 'link', 'link', 'person-circle'],
+                icons=['chat-fill', 'chat-fill', 'file', 'link', 'link', 'person-circle'],
                 menu_icon='chat-text-fill',
                 default_index=1,
                 styles={
                     "container": {"padding": "5!important", "background-color": 'lightgray'},
                     "icon": {"color": "white", "font-size": "20px"},
-                    "nav-link": {"color": "darkgray", "font-size": "20px", "text-align": "left", "margin": "0px",
+                    "nav-link": {"color": "black", "font-size": "20px", "text-align": "left", "margin": "0px",
                                  "--hover-color": "lightgreen"},
                     "nav-link-selected": {"background-color": "#02ab21"}, }
 
