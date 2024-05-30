@@ -82,7 +82,7 @@ def main():
             st.write(f"**{idx + 1}. {question}**")
             if quiz_type != "주관식":
                 options = st.session_state.quiz_data.alternatives[idx]
-                user_answer_key = st.radio("답 : ", options, key=None)
+                user_answer_key = st.radio("답 : ", options, key=idx, index=None)
                 user_answers[idx] = user_answer_key
             else:
                 user_answers[idx] = st.text_area("답 : ", key=idx)
