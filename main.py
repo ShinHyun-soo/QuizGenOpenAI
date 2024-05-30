@@ -50,19 +50,19 @@ class MultiApp:
                 styles={
                     "container": {"padding": "5!important", "background-color": 'lightgray'},
                     "icon": {"color": "white", "font-size": "20px"},
-                    "nav-link": {"color": "white", "font-size": "20px", "text-align": "left", "margin": "0px",
+                    "nav-link": {"color": "darkgray", "font-size": "20px", "text-align": "left", "margin": "0px",
                                  "--hover-color": "lightgreen"},
                     "nav-link-selected": {"background-color": "#02ab21"}, }
 
             )
 
-        if app == "주제어/키워드":
+        if app == "토픽/주제":
             kwd.main()
+        if app == "텍스트 입력":
+            txt.main()
         if app == "PDF 파일":
             pdf.main()
-        if app == "텍스트 집적 입력":
-            txt.main()
-        if app == 'URL(인터넷 사이트)':
+        if app == 'URL 주소':
             url.main()
         if app == 'YouTube 링크':
             ytb.main()
