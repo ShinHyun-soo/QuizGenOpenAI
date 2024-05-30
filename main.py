@@ -43,15 +43,15 @@ class MultiApp:
         with st.sidebar:
             app = option_menu(
                 menu_title='문제 출제 소스 ',
-                options=['주제어/키워드', 'PDF 파일', '텍스트 집적 입력', 'URL(인터넷 사이트)', 'YouTube 링크', '로그인'],
-                icons=['house-fill', 'person-circle', 'trophy-fill', 'chat-fill', 'info-circle-fill', 'info-circle-fill'],
+                options=['토픽/주제', '텍스트 입력',  'PDF 파일', 'URL 주소', 'YouTube 링크', '로그인'],
+                icons=['chat-fill', 'chat-fill', 'file-folder', 'link', 'link', 'person-circle'],
                 menu_icon='chat-text-fill',
                 default_index=1,
                 styles={
-                    "container": {"padding": "5!important", "background-color": 'gray'},
-                    "icon": {"color": "white", "font-size": "23px"},
+                    "container": {"padding": "5!important", "background-color": 'lightgray'},
+                    "icon": {"color": "white", "font-size": "20px"},
                     "nav-link": {"color": "white", "font-size": "20px", "text-align": "left", "margin": "0px",
-                                 "--hover-color": "blue"},
+                                 "--hover-color": "lightgreen"},
                     "nav-link-selected": {"background-color": "#02ab21"}, }
 
             )
