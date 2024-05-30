@@ -43,7 +43,7 @@ class MultiApp:
                 menu_title='문제 출제 소스 ',
                 options=['토픽/주제', '텍스트 입력',  'PDF 파일', 'URL 주소', 'YouTube 링크', '로그인'],
                 icons=['chat-text-fill', 'chat-text-fill', 'file', 'link', 'link', 'person-circle'],
-                menu_icon='',
+                menu_icon='cloud-upload',
                 default_index=0,
                 styles={
                     "container": {"padding": "5!important", "background-color": 'lightgray'},
