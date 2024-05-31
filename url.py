@@ -126,7 +126,7 @@ def main():
                 prompt_template = create_open_ended_template(language)
                 pydantic_object_schema = QuizOpenEnded
 
-            st.write("에러가 발생할 경우, 다시 생성버튼을 눌러주시면 됩니다.")
+            st.write("(생성 중), 퀴즈가 올바르게 생성되지 않으면, 기타 요구 사항란을 이용하여 퀴즈를 생성해 보시기 바랍니다.")
             chain = create_quiz_chain(prompt_template, llm, pydantic_object_schema)
             st.session_state.quiz_data4 = chain.invoke(
                 {"num_questions": num_questions, "quiz_context": st.session_state.context4, "difficulty": difficulty, "user_input":user_input})
