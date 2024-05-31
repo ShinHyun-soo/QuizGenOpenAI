@@ -105,21 +105,19 @@ def main():
         quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식", "단답형"])
 
     with col4:
-        llm_type = st.radio("LLM", ["Llama-3", "GPT-3.5-Turbo", "GPT-4", "GPT-4o"],index=3)
+        llm_type = st.radio("LLM", ["Llama-3(준비 중)", "GPT-3.5-Turbo", "GPT-4", "GPT-4o"],index=3)
 
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
     user_input = st.text_area("기타 요구 사항을 입력해 주십시오.")
-
-
 
     if llm_type == "Llama-3":
         llm = ChatOpenAI(model="gpt-4o")
 
     if llm_type == "GPT-3.5-Turbo":
-        llm = ChatOpenAI(model="gpt-4o")
+        llm = ChatOpenAI(model="gpt-3.5-turbo")
 
     if llm_type == "GPT-4":
-        llm = ChatOpenAI(model="gpt-4o")
+        llm = ChatOpenAI(model="gpt-4")
 
     if llm_type == "GPT-4o":
         llm = ChatOpenAI(model="gpt-4o")

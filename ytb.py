@@ -90,7 +90,7 @@ def main():
         quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식", "단답형"])
 
     with col4:
-        llm_type = st.radio("LLM", ["Llama-3", "GPT-3.5-Turbo", "GPT-4", "GPT-4o"], index=3)
+        llm_type = st.radio("LLM", ["Llama-3(준비 중)", "GPT-3.5-Turbo", "GPT-4", "GPT-4o"], index=3)
 
     num_questions = st.number_input("갯수 선택", min_value=1, max_value=10, value=3)
     user_input = st.text_area("기타 요구 사항을 입력해 주십시오.")
@@ -99,10 +99,10 @@ def main():
         llm = ChatOpenAI(model="gpt-4o")
 
     if llm_type == "GPT-3.5-Turbo":
-        llm = ChatOpenAI(model="gpt-4o")
+        llm = ChatOpenAI(model="gpt-3.5-turbo")
 
     if llm_type == "GPT-4":
-        llm = ChatOpenAI(model="gpt-4o")
+        llm = ChatOpenAI(model="gpt-4")
 
     if llm_type == "GPT-4o":
         llm = ChatOpenAI(model="gpt-4o")
@@ -119,7 +119,7 @@ def main():
                 prompt_template = create_short_answer_template(language)
                 pydantic_object_schema = QuizShortAnswer
             else:
-                prompt_template = create_open_ended_template(language, user_input)
+                prompt_template = create_open_ended_template(language)
                 pydantic_object_schema = QuizOpenEnded
 
             st.write("(생성 중), 퀴즈가 올바르게 생성되지 않으면, 기타 요구 사항란을 이용하여 퀴즈를 생성해 보시기 바랍니다.")
