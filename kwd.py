@@ -41,7 +41,7 @@ def main():
 
     # 세 번째 컬럼에 종류 선택 라디오 버튼을 배치합니다.
     with col2:
-        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식"], index=0)
+        quiz_type = st.radio("종류 선택", ["객관식", "참/거짓", "주관식", "단답형"], index=0)
 
     with col4:
         llm_type = st.radio("LLM", ["Llama-3", "GPT-3.5-Turbo", "GPT-4", "GPT-4o"], index=3)

@@ -30,7 +30,7 @@ def create_quiz_chain(prompt_template, llm, pydantic_object_schema):
     return prompt_template | llm.with_structured_output(pydantic_object_schema)
 
 
-def create_multiple_choice_template(language, user_input=None):
+def create_multiple_choice_template(language):
     # """Create the prompt template for the quiz app, including conditional translation."""
 
     # template = """
@@ -90,7 +90,7 @@ def create_multiple_choice_template(language, user_input=None):
     return prompt
 
 
-def create_true_false_template(language, user_input=None):
+def create_true_false_template(language):
     """Create the prompt template for the quiz app."""
     template = """
     You are an expert quiz maker for technical fields. Let's think step by step and create a true/false quiz in English with {num_questions} questions about the following concept/content: {quiz_context}.
@@ -126,7 +126,7 @@ def create_true_false_template(language, user_input=None):
     return prompt
 
 
-def create_open_ended_template(language, user_input=None):
+def create_open_ended_template(language):
     """Create the prompt template for the quiz app."""
     template = """
     You are an expert quiz maker for technical fields. Let's think step by step and create an open-ended quiz in English with {num_questions} questions about the following concept/content: {quiz_context}.
@@ -159,7 +159,7 @@ def create_open_ended_template(language, user_input=None):
     return prompt
 
 
-def create_short_answer_template(language, user_input=None):
+def create_short_answer_template(language):
     """Create the prompt template for the quiz app."""
     template = """
     You are an expert quiz maker for technical fields. Let's think step by step and create a short-answer quiz in English with {num_questions} questions about the following concept/content: {quiz_context}.
