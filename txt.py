@@ -60,7 +60,7 @@ def main():
     st.write(css, unsafe_allow_html=True)
     initialize_session_state(st.session_state, 3)
     st.header("QuizGen :books:")
-    st.caption("Text(긴 글) 업로드 후 원하시는 문제를 선택하여 주십시오. ")
+    st.caption("Text(긴 글) 업로드 후 원하시는 문제를 선택하여 주십시오. (예: https://ko.wikipedia.org/wiki/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5 ) ")
 
 
     raw_text = st.text_area("텍스트(긴 글) 입력란", height=150)
