@@ -53,7 +53,7 @@ def main():
     st.header("QuizGen :books:")
     st.caption("url 입력 후 원하시는 문제를 선택하여 주십시오. ")
     initialize_session_state(st.session_state, 4)
-    website_url = st.text_input("Url 입력란")
+    website_url = st.text_input("Url 입력란 (예: https://ko.wikipedia.org/wiki/%EC%9D%B8%EA%B3%B5%EC%A7%80%EB%8A%A5)")
 
     if st.button("입력"):
         with st.spinner("입력 중"):
