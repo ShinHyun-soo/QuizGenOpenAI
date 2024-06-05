@@ -54,7 +54,7 @@ def main():
     st.caption("유튜브 주소 입력 후 원하시는 문제를 선택하여 주십시오. ")
 
     initialize_session_state(st.session_state, 5)
-    website_url = st.text_input("유튜브 Url 입력란")
+    website_url = st.text_input("유튜브 Url 입력란 (예:https://youtu.be/8hUUizJYnOs?si=fsR3iMEzwfNCxXs2)")
 
     if st.button("입력"):
         with st.spinner("입력 중"):
