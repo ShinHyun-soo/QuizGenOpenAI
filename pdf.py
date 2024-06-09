@@ -60,7 +60,7 @@ def get_vectorstore(text_chunks):
 # 청크 선택 알고리즘 
 def select_chunk_set(vectorstore, text_chunks, num_vectors=5):
     # 구현의 편의를 위해 앞쪽 5개의 텍스트 가져옴
-    chunks = text_chunks[:5]
+    chunks = text_chunks[:10]
     # 선택된 텍스트 청크들을 하나의 문자열로 결합
     context = ' '.join(chunks)
     return context
