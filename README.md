@@ -1,6 +1,6 @@
 # Runs(Local)
 ```python
-streamlit run SubToQuiz.py
+streamlit run main.py
 ```
 
 # Runs(Site)
